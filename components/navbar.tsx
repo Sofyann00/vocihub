@@ -180,6 +180,47 @@ export function Navbar() {
                 className="w-full px-4 py-2 pl-10 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:border-[#f77a0e] focus:ring-2 focus:ring-[#f77a0e]/20 transition-all duration-200"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              
+              {/* Mobile Search Results */}
+              {showSearchResults && searchQuery && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 max-h-96 overflow-y-auto z-50">
+                  {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                      <Link 
+                        key={product.id} 
+                        href={`/products/${product.id}`}
+                        className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
+                        onClick={() => {
+                          setSearchQuery("")
+                          setShowSearchResults(false)
+                          setIsMobileMenuOpen(false)
+                        }}
+                      >
+                        <div className="relative w-10 h-10 flex-shrink-0">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {product.name}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {product.category}
+                          </p>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="p-3 text-sm text-gray-500 text-center">
+                      No products found
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Mobile Navigation Links */}

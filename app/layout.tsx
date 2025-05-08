@@ -12,8 +12,8 @@ import { FilterProvider } from "@/contexts/filter-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "vocihub - Professional Architectural Design Services",
-  description: "Your trusted partner for professional architectural services. Specializing in residential design, commercial spaces, interior solutions, landscape design, and comprehensive architectural services. Transform your vision into remarkable spaces with our expert team.",
+  title: "vocihub - Your Trusted Game Voucher Platform",
+  description: "Your trusted platform for game vouchers and digital products. We provide secure, instant, and reliable services for all your gaming needs. Get your game vouchers, top-ups, and digital products with the best prices and fastest delivery.",
   icons: {
     icon: "/favicon/favicon.ico",
     shortcut: "/favicon/favicon-16x16.png",

@@ -35,6 +35,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   }
 
   const handleAddToCart = () => {
+    if (!user?.email) {
+      toast({
+        title: "Error",
+        description: "Please log in to complete your purchase.",
+        variant: "destructive"
+      })
+      return
+    }
     if (!selectedItem || !playerId || !selectedPayment) {
       toast({
         title: "Missing information",
