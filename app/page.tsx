@@ -249,20 +249,20 @@ export default function Home() {
   return (
     <div className="flex flex-col bg-white text-gray-900">
       {/* Hero Section as Simple Carousel */}
-      <section className="relative mb-12 mt-32 max-h-[600px]">
-        <div className="w-full mx-auto">
+      <section className="relative mb-8 sm:mb-12 mt-20 sm:mt-32 max-h-[400px] sm:max-h-[500px] md:max-h-[600px] 2xl:max-h-[800px]">
+        <div className="w-full mx-auto max-w-[1920px]">
           <Slider
             {...sliderSettings}
-            className="h-full max-h-[600px] [&_.slick-list]:h-full [&_.slick-slide.slick-active]:opacity-100 [&_.slick-slide]:ml-0 [&_.slick-slide]:opacity-70 [&_.slick-slide]:px-2 [&_.slick-track]:h-full [&_.slick-dots]:bottom-[-40px] [&_.slick-prev]:left-4 [&_.slick-next]:right-4 [&_.slick-prev]:z-10 [&_.slick-next]:z-10 [&_.slick-prev]:bg-white/20 [&_.slick-next]:bg-white/20 [&_.slick-prev]:rounded-full [&_.slick-next]:rounded-full [&_.slick-prev]:w-10 [&_.slick-next]:w-10 [&_.slick-prev]:h-10 [&_.slick-next]:h-10 [&_.slick-prev]:flex [&_.slick-next]:flex [&_.slick-prev]:items-center [&_.slick-next]:items-center [&_.slick-prev]:justify-center [&_.slick-next]:justify-center [&_.slick-prev]:hover:bg-white/30 [&_.slick-next]:hover:bg-white/30 [&_.slick-prev]:transition-all [&_.slick-next]:transition-all [&_.slick-prev]:duration-300 [&_.slick-next]:duration-300"
+            className="h-full max-h-[400px] sm:max-h-[500px] md:max-h-[600px] 2xl:max-h-[800px] [&_.slick-list]:h-full [&_.slick-slide.slick-active]:opacity-100 [&_.slick-slide]:ml-0 [&_.slick-slide]:opacity-70 [&_.slick-slide]:px-2 [&_.slick-track]:h-full [&_.slick-dots]:bottom-[-40px] [&_.slick-prev]:left-2 sm:[&_.slick-prev]:left-4 2xl:[&_.slick-prev]:left-8 [&_.slick-next]:right-2 sm:[&_.slick-next]:right-4 2xl:[&_.slick-next]:right-8 [&_.slick-prev]:z-10 [&_.slick-next]:z-10 [&_.slick-prev]:bg-white/20 [&_.slick-next]:bg-white/20 [&_.slick-prev]:rounded-full [&_.slick-next]:rounded-full [&_.slick-prev]:w-8 sm:[&_.slick-prev]:w-10 2xl:[&_.slick-prev]:w-14 [&_.slick-next]:w-8 sm:[&_.slick-next]:w-10 2xl:[&_.slick-next]:w-14 [&_.slick-prev]:h-8 sm:[&_.slick-prev]:h-10 2xl:[&_.slick-prev]:h-14 [&_.slick-next]:h-8 sm:[&_.slick-next]:h-10 2xl:[&_.slick-next]:h-14 [&_.slick-prev]:flex [&_.slick-next]:flex [&_.slick-prev]:items-center [&_.slick-next]:items-center [&_.slick-prev]:justify-center [&_.slick-next]:justify-center [&_.slick-prev]:hover:bg-white/30 [&_.slick-next]:hover:bg-white/30 [&_.slick-prev]:transition-all [&_.slick-next]:transition-all [&_.slick-prev]:duration-300 [&_.slick-next]:duration-300"
           >
             {heroSlides.map((slide) => (
               <div key={slide.key} className="relative aspect-[2/1] flex items-center justify-center px-2">
-                <div className="relative w-full h-full overflow-hidden rounded-3xl shadow-2xl">
+                <div className="relative w-full h-full overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl">
                   <img src={slide.bg} alt="" className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                  <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full p-6 md:p-16">
-                    <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg tracking-tight">{slide.title}</h2>
-                    <span className="text-lg sm:text-xl md:text-2xl text-white/90 font-medium drop-shadow-lg max-w-2xl">{slide.subtitle}</span>
+                  <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full p-4 sm:p-6 md:p-16 2xl:p-24">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl 2xl:text-8xl font-bold text-white mb-3 sm:mb-6 drop-shadow-lg tracking-tight">{slide.title}</h2>
+                    <span className="text-base sm:text-lg md:text-xl lg:text-2xl 2xl:text-4xl text-white/90 font-medium drop-shadow-lg max-w-2xl 2xl:max-w-4xl">{slide.subtitle}</span>
                   </div>
                 </div>
               </div>
@@ -272,22 +272,22 @@ export default function Home() {
       </section>
 
       {/* Featured Products Section */}
-      <section ref={servicesRef} className="py-24 relative">
+      <section ref={servicesRef} className="py-12 sm:py-16 md:py-24 2xl:py-32 mt-20 relative">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 bg-[#f77a0e]/10 text-[#f77a0e] rounded-full text-sm font-medium mb-4 border border-[#f77a0e]/20">
+        <div className="w-full mx-auto max-w-[1920px] px-4 sm:px-6 2xl:px-8">
+          <div className="text-center mb-8 sm:mb-16 2xl:mb-24">
+            <span className="inline-block px-3 sm:px-4 2xl:px-6 py-1 sm:py-1.5 2xl:py-2 bg-[#f77a0e]/10 text-[#f77a0e] rounded-full text-xs sm:text-sm 2xl:text-lg font-medium mb-1 sm:mb-1 2xl:mb-2 border border-[#f77a0e]/20">
               Produk Unggulan
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl 2xl:text-6xl font-bold mb-3 sm:mb-4 2xl:mb-6">
               <span className="bg-gradient-to-r text-[#f77a0e] bg-clip-text text-transparent">Voucher Game Terpopuler</span>
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg 2xl:text-2xl text-gray-600 max-w-2xl 2xl:max-w-4xl mx-auto px-4">
               Pilih dari berbagai macam voucher digital dan kredit game yang kami sediakan
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 md:gap-8 2xl:gap-12">
             {products.map((product) => (
               <Link href={`/products/${product.id}`} key={product.id}>
                 <Card className="group cursor-pointer bg-white border-gray-100">
@@ -299,22 +299,22 @@ export default function Home() {
                       className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 2xl:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                       <div className="flex items-center justify-between">
-                        <span className="text-white font-medium text-sm">
+                        <span className="text-white font-medium text-xs sm:text-sm 2xl:text-lg">
                           {formatPrice(product.price)}
                         </span>
-                        <Button className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white text-sm px-4 py-2 rounded-full transition-all duration-300">
+                        <Button className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white text-xs sm:text-sm 2xl:text-base px-3 sm:px-4 2xl:px-6 py-1.5 sm:py-2 2xl:py-3 rounded-full transition-all duration-300">
                           Lihat Detail
                         </Button>
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-lg mb-1 line-clamp-1 group-hover:text-[#f77a0e] transition-colors duration-200">
+                  <CardContent className="p-3 sm:p-4 2xl:p-6">
+                    <h3 className="font-semibold text-base sm:text-lg 2xl:text-2xl mb-1 line-clamp-1 group-hover:text-[#f77a0e] transition-colors duration-200">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">
+                    <p className="text-xs sm:text-sm 2xl:text-lg text-gray-500 line-clamp-2">
                       {product.description}
                     </p>
                   </CardContent>
@@ -326,49 +326,49 @@ export default function Home() {
       </section>
 
       {/* QnA Section */}
-      <section className="py-24 relative">
+      <section className="py-12 sm:py-16 md:py-24 2xl:py-32 relative">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 bg-[#f77a0e]/10 text-[#f77a0e] rounded-full text-sm font-medium mb-4 border border-[#f77a0e]/20">
+        <div className="max-w-4xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 2xl:px-8">
+          <div className="text-center mb-8 sm:mb-16 2xl:mb-24">
+            <span className="inline-block px-3 sm:px-4 2xl:px-6 py-1 sm:py-1.5 2xl:py-2 bg-[#f77a0e]/10 text-[#f77a0e] rounded-full text-xs sm:text-sm 2xl:text-lg font-medium mb-3 sm:mb-4 2xl:mb-6 border border-[#f77a0e]/20">
               Pertanyaan Umum
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl 2xl:text-6xl font-bold mb-3 sm:mb-4 2xl:mb-6">
               <span className="bg-gradient-to-r text-[#f77a0e] bg-clip-text text-transparent">Frequently Asked Questions</span>
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg 2xl:text-2xl text-gray-600 max-w-2xl 2xl:max-w-4xl mx-auto px-4">
               Temukan jawaban untuk pertanyaan yang sering diajukan tentang layanan kami
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4 2xl:space-y-6">
             {qnaList.map((qna, idx) => (
               <div 
                 key={qna.question} 
                 className="group relative"
               >
                 <button
-                  className={`w-full flex items-center justify-between p-6 text-lg sm:text-xl font-semibold rounded-2xl transition-all duration-300 ${
+                  className={`w-full flex items-center justify-between p-4 sm:p-6 2xl:p-8 text-base sm:text-lg md:text-xl 2xl:text-2xl font-semibold rounded-xl sm:rounded-2xl 2xl:rounded-3xl transition-all duration-300 ${
                     openQna === idx 
                       ? "bg-white shadow-lg border border-[#f77a0e]/20" 
                       : "bg-white/50 hover:bg-white/80 border border-gray-100"
                   }`}
                   onClick={() => setOpenQna(openQna === idx ? null : idx)}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                  <div className="flex items-center gap-3 sm:gap-4 2xl:gap-6">
+                    <div className={`w-6 h-6 sm:w-8 sm:h-8 2xl:w-12 2xl:h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
                       openQna === idx 
                         ? "bg-[#f77a0e] text-white" 
                         : "bg-[#f77a0e]/10 text-[#f77a0e]"
                     }`}>
-                      <span className="text-lg font-bold">{idx + 1}</span>
+                      <span className="text-sm sm:text-lg 2xl:text-2xl font-bold">{idx + 1}</span>
                     </div>
-                    <span className="text-left font-[600] text-gray-800 group-hover:text-[#f77a0e] transition-colors duration-200">
+                    <span className="text-left font-[600] text-gray-800 group-hover:text-[#f77a0e] transition-colors duration-200 text-sm sm:text-base md:text-lg 2xl:text-xl">
                       {qna.question}
                     </span>
                   </div>
                   <ChevronRight 
-                    className={`ml-2 h-6 w-6 transition-all duration-300 ${
+                    className={`ml-2 h-5 w-5 sm:h-6 sm:w-6 2xl:h-8 2xl:w-8 transition-all duration-300 ${
                       openQna === idx 
                         ? "rotate-90 text-[#f77a0e]" 
                         : "text-gray-400 group-hover:text-[#f77a0e]"
@@ -377,15 +377,15 @@ export default function Home() {
                 </button>
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    openQna === idx ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                    openQna === idx ? "max-h-[500px] 2xl:max-h-[800px] opacity-100" : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="p-6 pt-4 bg-white/50 rounded-b-2xl border-x border-b border-gray-100">
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#f77a0e]/10 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle2 className="w-5 h-5 text-[#f77a0e]" />
+                  <div className="p-4 sm:p-6 2xl:p-8 pt-3 sm:pt-4 2xl:pt-6 bg-white/50 rounded-b-xl sm:rounded-b-2xl 2xl:rounded-b-3xl border-x border-b border-gray-100">
+                    <div className="flex items-start gap-3 sm:gap-4 2xl:gap-6">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 2xl:w-12 2xl:h-12 rounded-full bg-[#f77a0e]/10 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 2xl:w-7 2xl:h-7 text-[#f77a0e]" />
                       </div>
-                      <div className="text-gray-600 leading-relaxed">
+                      <div className="text-sm sm:text-base 2xl:text-xl text-gray-600 leading-relaxed">
                         {qna.answer}
                       </div>
                     </div>
@@ -395,15 +395,15 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-gray-500 mb-4">Masih punya pertanyaan?</p>
+          <div className="mt-8 sm:mt-12 2xl:mt-16 text-center">
+            <p className="text-sm sm:text-base 2xl:text-xl text-gray-500 mb-3 sm:mb-4 2xl:mb-6">Masih punya pertanyaan?</p>
             <a
               href="https://wa.me/6285811959392"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#f77a0e] rounded-full font-medium hover:bg-[#f77a0e]/90 transition-all duration-300 shadow-lg shadow-[#f77a0e]/20 hover:shadow-xl hover:shadow-[#f77a0e]/30 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-4 sm:px-6 2xl:px-8 py-2.5 sm:py-3 2xl:py-4 bg-white text-[#f77a0e] rounded-full text-sm sm:text-base 2xl:text-xl font-medium hover:bg-[#f77a0e]/90 transition-all duration-300 shadow-lg shadow-[#f77a0e]/20 hover:shadow-xl hover:shadow-[#f77a0e]/30 hover:-translate-y-0.5"
             >
-              <img src="/wa_img.png" alt="WhatsApp" className="w-6 h-6" />
+              <img src="/wa_img.png" alt="WhatsApp" className="w-5 h-5 sm:w-6 sm:h-6 2xl:w-8 2xl:h-8" />
               Chat dengan Kami
             </a>
           </div>
