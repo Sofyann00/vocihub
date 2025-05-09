@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
+import { RedeemCode } from "@/components/redeem-code"
 
 export default function Home() {
   const { user, logout } = useUser()
@@ -29,6 +30,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [openQna, setOpenQna] = useState<number | null>(null);
+  const [points, setPoints] = useState(0)
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -406,6 +408,28 @@ export default function Home() {
               <img src="/wa_img.png" alt="WhatsApp" className="w-5 h-5 sm:w-6 sm:h-6 2xl:w-8 2xl:h-8" />
               Chat dengan Kami
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Redeem Code Section */}
+      <section className="py-12 sm:py-16 md:py-24 2xl:py-32 relative">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+        <div className="w-full mx-auto max-w-[1920px] px-4 sm:px-6 2xl:px-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-4 sm:mb-6">
+              <span className="inline-block px-1 sm:px-2 2xl:px-4 py-0.5 sm:py-1 2xl:py-2 bg-[#f77a0e]/10 text-[#f77a0e] rounded-full text-xs sm:text-sm 2xl:text-lg font-medium mb-1 sm:mb-1 2xl:mb-4 border border-[#f77a0e]/20">
+                Redeem Code
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl 2xl:text-6xl font-bold mb-1 sm:mb-1 2xl:mb-2">
+                <span className="bg-gradient-to-r text-[#f77a0e] bg-clip-text text-transparent">Redeem Your Code</span>
+              </h2>
+              <p className="text-base sm:text-lg 2xl:text-2xl text-gray-600">
+                Enter your voucher code below to redeem your rewards
+              </p>
+            </div>
+
+            <RedeemCode onPointsUpdate={(newPoints) => setPoints(prev => prev + newPoints)} />
           </div>
         </div>
       </section>

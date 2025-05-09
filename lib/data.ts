@@ -9572,6 +9572,7 @@ export const products: Product[] = [
   }
 ];
 
+
 // Helper function to format price in IDR
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat("id-ID", {
