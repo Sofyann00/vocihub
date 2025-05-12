@@ -75,6 +75,14 @@ export default function ProfilePage() {
               <p className="text-gray-600 mb-4">{user?.email}</p>
               <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
                 <div className="bg-gray-50 rounded-xl px-4 py-2">
+                  <p className="text-sm text-gray-600">Phone Number</p>
+                  <p className="text-lg font-semibold text-gray-900">{user?.phoneNumber}</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl px-4 py-2">
+                  <p className="text-sm text-gray-600">Wallet Type</p>
+                  <p className="text-lg font-semibold text-[#f77a0e] capitalize">{user?.walletType}</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl px-4 py-2">
                   <p className="text-sm text-gray-600">Total Orders</p>
                   <p className="text-lg font-semibold text-gray-900">{orders.length}</p>
                 </div>

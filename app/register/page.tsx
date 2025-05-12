@@ -8,6 +8,13 @@ import { useUser } from "@/contexts/user-context"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +22,8 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    phoneNumber: "",
+    walletType: "",
   })
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -33,7 +42,13 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(formData.name, formData.email, formData.password)
+      await register(
+        formData.name, 
+        formData.email, 
+        formData.password,
+        parseInt(formData.phoneNumber),
+        formData.walletType
+      )
       router.push("/profile")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed")
@@ -73,6 +88,39 @@ export default function RegisterPage() {
                   }
                   disabled={isLoading}
                 />
+              </div>
+              <div>
+                <label className="block mb-2">Phone Number</label>
+                <Input
+                  type="tel"
+                  required
+                  value={formData.phoneNumber}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phoneNumber: e.target.value })
+                  }
+                  disabled={isLoading}
+                  placeholder="e.g., 08123456789"
+                />
+              </div>
+              <div>
+                <label className="block mb-2">Wallet Type</label>
+                <Select
+                  required
+                  value={formData.walletType}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, walletType: value })
+                  }
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your wallet" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dana">DANA</SelectItem>
+                    <SelectItem value="ovo">OVO</SelectItem>
+                    <SelectItem value="gopay">GoPay</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block mb-2">Password</label>

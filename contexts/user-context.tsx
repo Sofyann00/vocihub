@@ -7,6 +7,8 @@ type User = {
   id: string;
   name: string;
   email: string;
+  phoneNumber: number;
+  walletType: string;
   orders: Order[];
 };
 
@@ -31,7 +33,7 @@ type OrderItem = {
 type UserContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, phoneNumber: number, walletType: string) => Promise<void>;
   logout: () => void;
   addOrder: (
     order: Omit<Order, "id" | "date"> & { id?: string; date?: string }
@@ -87,25 +89,29 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
-    setIsLoading(true);
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
+  const register = async (name: string, email: string, password: string, phoneNumber: number, walletType: string) => {
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        phoneNumber,
+        walletType,
+      }),
+    })
 
     if (!response.ok) {
-      const error = await response.json();
-      setIsLoading(false);
-      throw new Error(error.error);
+      const data = await response.json()
+      throw new Error(data.error || 'Registration failed')
     }
 
-    const userData = await response.json();
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setIsLoading(false);
-  };
+    const user = await response.json()
+    setUser(user)
+  }
 
   const logout = () => {
     setUser(null);

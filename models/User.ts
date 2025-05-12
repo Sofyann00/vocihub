@@ -14,6 +14,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  phoneNumber: {
+    type: Number,
+    required: true
+  },
+  walletType: {
+    type: String,
+    enum: ['dana', 'ovo', 'gopay'],
+    required: true
+  },
   orders: [{
     items: [{
       id: String,
