@@ -7,7 +7,6 @@ export interface VoucherCode {
 }
 
 export const dummyVoucherCodes: VoucherCode[] = [
-  // Mobile Legends
   {
     id: '1',
     code: 'MLBB-1234-5678',
@@ -22,7 +21,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Free Fire
   {
     id: '3',
     code: 'FF-1234-5678',
@@ -37,7 +35,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // PUBG Mobile
   {
     id: '5',
     code: 'PUBG-1234-5678',
@@ -52,22 +49,20 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Mobile Legends: Bang Bang
   {
     id: '7',
     code: 'MLBB-2345-6789',
-    gameId: '4',
+    gameId: '12',
     value: 75000,
     status: 'valid'
   },
   {
     id: '8',
     code: 'MLBB-9876-5432',
-    gameId: '4',
+    gameId: '1',
     value: 25000,
     status: 'valid'
   },
-  // Free Fire MAX
   {
     id: '9',
     code: 'FFM-1234-5678',
@@ -82,7 +77,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // PUBG Mobile Global
   {
     id: '11',
     code: 'PUBGM-1234-5678',
@@ -97,7 +91,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Mobile Legends: Adventure
   {
     id: '13',
     code: 'MLA-1234-5678',
@@ -112,7 +105,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Free Fire OB
   {
     id: '15',
     code: 'FFOB-1234-5678',
@@ -127,7 +119,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // PUBG Mobile KR
   {
     id: '17',
     code: 'PUBGKR-1234-5678',
@@ -142,7 +133,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Mobile Legends: Bang Bang Advanced Server
   {
     id: '19',
     code: 'MLBBAS-1234-5678',
@@ -157,7 +147,6 @@ export const dummyVoucherCodes: VoucherCode[] = [
     value: 50000,
     status: 'valid'
   },
-  // Free Fire Advance Server
   {
     id: '21',
     code: 'FFAS-1234-5678',
@@ -175,13 +164,17 @@ export const dummyVoucherCodes: VoucherCode[] = [
 ];
 
 export const validateVoucherCode = (code: string, gameId: string): { isValid: boolean; value?: number } => {
-  const voucher = dummyVoucherCodes.find(
-    v => v.code === code && v.gameId === gameId && v.status === 'valid'
-  );
+  // First check if the code exists and is valid
+  const voucher = dummyVoucherCodes.find(v => v.code === code && v.status === 'valid');
   
-  if (voucher) {
-    return { isValid: true, value: voucher.value };
+  if (!voucher) {
+    return { isValid: false };
+  }
+
+  // Then check if the voucher belongs to the correct game
+  if (voucher.gameId !== gameId) {
+    return { isValid: false };
   }
   
-  return { isValid: false };
+  return { isValid: true, value: voucher.value };
 };

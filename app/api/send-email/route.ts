@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
     secure: true, // Set to false for port 2525
     auth: {
       user: 'admin@vocihub.com',
-      pass: 'vocihub123!',
+      pass: 'Vocihub123!',
     },
 });
 

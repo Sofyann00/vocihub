@@ -8,7 +8,8 @@ type User = {
   name: string;
   email: string;
   phoneNumber: number;
-  walletType: string;
+  bankAccountNumber: string;
+  bankName: string;
   orders: Order[];
 };
 
@@ -33,7 +34,7 @@ type OrderItem = {
 type UserContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, phoneNumber: number, walletType: string) => Promise<void>;
+  register: (name: string, email: string, password: string, phoneNumber: number, bankAccountNumber: string, bankName: string) => Promise<void>;
   logout: () => void;
   addOrder: (
     order: Omit<Order, "id" | "date"> & { id?: string; date?: string }
@@ -89,7 +90,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const register = async (name: string, email: string, password: string, phoneNumber: number, walletType: string) => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    phoneNumber: number,
+    bankAccountNumber: string,
+    bankName: string
+  ) => {
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
@@ -100,7 +108,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         email,
         password,
         phoneNumber,
-        walletType,
+        bankAccountNumber,
+        bankName
       }),
     })
 

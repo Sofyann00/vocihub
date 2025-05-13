@@ -6,7 +6,7 @@ import User from '@/models/User'
 export async function POST(request: Request) {
   try {
     await dbConnect()
-    const { name, email, password, phoneNumber, walletType } = await request.json()
+    const { name, email, password, phoneNumber, bankAccountNumber, bankName } = await request.json()
 
     const existingUser = await User.findOne({ email })
     
@@ -23,7 +23,8 @@ export async function POST(request: Request) {
       email,
       password: hashedPassword,
       phoneNumber,
-      walletType,
+      bankAccountNumber,
+      bankName,
       orders: []
     })
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -18,36 +18,24 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  walletType: {
+  bankAccountNumber: {
     type: String,
-    enum: ['dana', 'ovo', 'gopay'],
+    required: true
+  },
+  bankName: {
+    type: String,
     required: true
   },
   orders: [{
-    items: [{
-      id: String,
-      name: String,
-      price: Number,
-      quantity: Number,
-      image: String
-    }],
-    total: Number,
-    status: {
-      type: String,
-      enum: ['pending', 'completed'],
-      default: 'pending'
-    },
-    shippingAddress: String,
-    courier: String,
-    date: {
-      type: Date,
-      default: Date.now
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Order'
   }],
   createdAt: {
     type: Date,
     default: Date.now
   }
+}, {
+  timestamps: true
 })
 
-export default mongoose.models.User || mongoose.model('User', UserSchema) 
+export default mongoose.models.User || mongoose.model('User', userSchema) 

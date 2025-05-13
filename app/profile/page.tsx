@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BlockiesAvatar } from "../../components/ui/blockies-avatar";
-import { Package, Clock, CheckCircle2, XCircle, AlertCircle, User } from "lucide-react";
+import { Package, Clock, CheckCircle2, XCircle, AlertCircle, User, Building2, CreditCard } from "lucide-react";
 import { Order } from "@/lib/types";
 import { RedeemCode } from "@/components/redeem-code"
 
@@ -27,6 +27,16 @@ export default function ProfilePage() {
 
     return () => clearTimeout(redirectTimer);
   }, [user, router, isLoading]);
+
+  const maskBankAccount = (accountNumber: string) => {
+    if (!accountNumber) return '';
+    const length = accountNumber.length;
+    const visibleLength = Math.floor(length / 2);
+    const maskedLength = length - visibleLength;
+    const visiblePart = accountNumber.slice(0, visibleLength);
+    const maskedPart = '*'.repeat(maskedLength);
+    return visiblePart + maskedPart;
+  };
 
   if (isLoading) {
     return (
@@ -79,8 +89,12 @@ export default function ProfilePage() {
                   <p className="text-lg font-semibold text-gray-900">{user?.phoneNumber}</p>
                 </div>
                 <div className="bg-gray-50 rounded-xl px-4 py-2">
-                  <p className="text-sm text-gray-600">Wallet Type</p>
-                  <p className="text-lg font-semibold text-[#f77a0e] capitalize">{user?.walletType}</p>
+                  <p className="text-sm text-gray-600">Bank Name</p>
+                  <p className="text-lg font-semibold text-gray-900">{user?.bankName}</p>
+                </div>
+                <div className="bg-gray-50 rounded-xl px-4 py-2">
+                  <p className="text-sm text-gray-600">Bank Account</p>
+                  <p className="text-lg font-semibold text-gray-900">{maskBankAccount(user?.bankAccountNumber || '')}</p>
                 </div>
                 <div className="bg-gray-50 rounded-xl px-4 py-2">
                   <p className="text-sm text-gray-600">Total Orders</p>
@@ -89,10 +103,6 @@ export default function ProfilePage() {
                 <div className="bg-gray-50 rounded-xl px-4 py-2">
                   <p className="text-sm text-gray-600">Points</p>
                   <p className="text-lg font-semibold text-[#f77a0e]">{points}</p>
-                </div>
-                <div className="bg-gray-50 rounded-xl px-4 py-2">
-                  <p className="text-sm text-gray-600">Member Since</p>
-                  <p className="text-lg font-semibold text-gray-900">2024</p>
                 </div>
               </div>
             </div>
