@@ -71,7 +71,7 @@ export function SellVoucherDialog({ isOpen, onClose, gameId, gameName }: SellVou
                 Nilai voucher: Rp {validationResult.value?.toLocaleString()}
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Uang sejumlah Rp {validationResult.value?.toLocaleString()} akan segera ditransfer ke wallet Anda
+                Uang sejumlah Rp {validationResult.value?.toLocaleString()} akan segera ditransfer ke rekening Anda
               </p>
               <p className="text-xs text-gray-400 mt-1">
                 Proses transfer biasanya memakan waktu 3-5 menit
