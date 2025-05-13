@@ -66,7 +66,6 @@ export default function SellVoucher() {
                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 2xl:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                       <div className="flex items-center justify-between">
                         <span className="text-white font-medium text-xs sm:text-sm 2xl:text-lg">
-                          {formatPrice(product.price)}
                         </span>
                         <Button 
                           className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white text-xs sm:text-sm 2xl:text-base px-3 sm:px-4 2xl:px-6 py-1.5 sm:py-2 2xl:py-3 rounded-full transition-all duration-300"
