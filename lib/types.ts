@@ -48,3 +48,12 @@ export interface Order {
   itemName: string;
   date: string;
 }
+
+export interface GameVoucher {
+  id: string;
+  gameName: string;
+  price: number;
+  type: 'Diamond' | 'UC' | 'Voucher' | 'Other';
+  createdAt: string;
+  createdBy: string;
+}

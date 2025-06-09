@@ -104,6 +104,14 @@ export default function ProfilePage() {
                   <p className="text-sm text-gray-600">Points</p>
                   <p className="text-lg font-semibold text-[#f77a0e]">{points}</p>
                 </div>
+                {user?.email === 'administrator@gmail.com' && (
+                  <button
+                    onClick={() => router.push('/dashboard')}
+                    className="bg-[#f77a0e] text-white px-6 py-2 rounded-xl hover:bg-[#f77a0e]/90 transition-colors"
+                  >
+                    Dashboard
+                  </button>
+                )}
               </div>
             </div>
           </div>
