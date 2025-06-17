@@ -290,39 +290,55 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 md:gap-8 2xl:gap-12">
-            {products.map((product) => (
-              <Link href={`/products/${product.id}`} key={product.id}>
-                <Card className="group cursor-pointer bg-white border-gray-100">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 2xl:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                      <div className="flex items-center justify-between">
-                        <span className="text-white font-medium text-xs sm:text-sm 2xl:text-lg">
-                          {formatPrice(product.price)}
-                        </span>
-                        <Button className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white text-xs sm:text-sm 2xl:text-base px-3 sm:px-4 2xl:px-6 py-1.5 sm:py-2 2xl:py-3 rounded-full transition-all duration-300">
-                          Lihat Detail
-                        </Button>
-                      </div>
+            {products.map((product) => {
+              const isHighlighted = product.name.toLowerCase().includes('mobile legends') || 
+                    product.name.toLowerCase().includes('free fire diamonds') ||
+                    product.name.toLowerCase().includes('pubg mobile') ||
+                    product.name.toLowerCase().includes('ragnarok m classic');
+
+              return (
+                <div key={product.id} className={`relative ${!isHighlighted && 'cursor-not-allowed'}`}>
+                  {!isHighlighted && (
+                    <div className="absolute inset-0 bg-black/50 z-10 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-medium text-sm sm:text-base 2xl:text-lg px-4 py-2 bg-black/50 rounded-full">
+                        Coming Soon
+                      </span>
                     </div>
-                  </div>
-                  <CardContent className="p-3 sm:p-4 2xl:p-6">
-                    <h3 className="font-semibold text-base sm:text-lg 2xl:text-2xl mb-1 line-clamp-1 group-hover:text-[#f77a0e] transition-colors duration-200">
-                      {product.name}
-                    </h3>
-                    <p className="text-xs sm:text-sm 2xl:text-lg text-gray-500 line-clamp-2">
-                      {product.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                  )}
+                  <Link href={isHighlighted ? `/products/${product.id}` : '#'} className={!isHighlighted ? 'pointer-events-none' : ''}>
+                    <Card className={`group cursor-pointer bg-white border-gray-100 ${!isHighlighted && 'opacity-50'}`}>
+                      <div className="relative aspect-[4/3] w-full overflow-hidden">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 2xl:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                          <div className="flex items-center justify-between">
+                            <span className="text-white font-medium text-xs sm:text-sm 2xl:text-lg">
+                              {formatPrice(product.price)}
+                            </span>
+                            <Button className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white text-xs sm:text-sm 2xl:text-base px-3 sm:px-4 2xl:px-6 py-1.5 sm:py-2 2xl:py-3 rounded-full transition-all duration-300">
+                              Lihat Detail
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                      <CardContent className="p-3 sm:p-4 2xl:p-6">
+                        <h3 className="font-semibold text-base sm:text-lg 2xl:text-2xl mb-1 line-clamp-1 group-hover:text-[#f77a0e] transition-colors duration-200">
+                          {product.name}
+                        </h3>
+                        <p className="text-xs sm:text-sm 2xl:text-lg text-gray-500 line-clamp-2">
+                          {product.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

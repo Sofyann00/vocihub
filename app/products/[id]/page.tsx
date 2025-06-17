@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useCart } from "@/contexts/cart-context"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
@@ -17,16 +17,24 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog"
+import { useQRCode } from "next-qrcode"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { addItem } = useCart()
   const { toast } = useToast()
   const { user, addOrder } = useUser()
+  const { Canvas } = useQRCode()
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
   const [playerId, setPlayerId] = useState("")
+  const [serverId, setServerId] = useState("")
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null)
   const [showPaymentDialog, setShowPaymentDialog] = useState(false)
   const [isSendingEmail, setIsSendingEmail] = useState(false)
+  const [digiflazzItems, setDigiflazzItems] = useState<any[]>([])
+  const [paymentData, setPaymentData] = useState<any>(null)
+  const [isLoadingPayment, setIsLoadingPayment] = useState(false)
+  const [isCheckingPayment, setIsCheckingPayment] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   const product = products.find(p => p.id === parseInt(params.id))
 
@@ -34,15 +42,107 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     notFound()
   }
 
-  const handleAddToCart = () => {
-    if (!user?.email) {
+  useEffect(() => {
+    const fetchDigiflazzItems = async () => {
+      const isHighlightedProduct = product.name.toLowerCase().includes('mobile legends') || 
+        product.name.toLowerCase().includes('free fire') ||
+        product.name.toLowerCase().includes('pubg mobile') ||
+        product.name.toLowerCase().includes('ragnarok m classic');
+
+      if (isHighlightedProduct) {
+        try {
+          // Determine the brand based on product name
+          let brand = '';
+          if (product.name.toLowerCase().includes('mobile legends')) {
+            brand = 'mobile legends';
+          } else if (product.name.toLowerCase().includes('free fire')) {
+            brand = 'free fire';
+          } else if (product.name.toLowerCase().includes('pubg mobile')) {
+            brand = 'pubg mobile';
+          } else if (product.name.toLowerCase().includes('ragnarok m classic')) {
+            brand = 'ragnarok m classic';
+          }
+
+          const response = await fetch(`/api/digiflazz/price-list?brand=${encodeURIComponent(brand)}`);
+          const data = await response.json();
+          
+          if (data.data) {
+            // Filter items by price and status
+            const sortedItems = data.data
+              .filter((item: any) => item.price >= 15000 && item.buyer_product_status === true)
+              .map((item: any) => ({
+                ...item,
+                product_name: item.product_name
+                  .replace('MOBILELEGEND - ', '').replace('MOBILE LEGENDS', '')
+                  .replace('FREEFIRE - ', '')
+                  .replace('PUBGM - ', '')
+                  .replace('RAGNAROK - ', '')
+              }))
+              .sort((a: any, b: any) => a.price - b.price);
+            
+            setDigiflazzItems(sortedItems);
+          }
+        } catch (error) {
+          console.error('Error fetching Digiflazz items:', error);
+        }
+      }
+    };
+
+    fetchDigiflazzItems();
+  }, [product.id, product.name]);
+
+  // Add polling mechanism
+  useEffect(() => {
+    let pollInterval: NodeJS.Timeout;
+
+    const checkPaymentStatus = async () => {
+      if (!paymentData?.depositId || isCheckingPayment) return;
+
+      try {
+        setIsCheckingPayment(true);
+        const response = await fetch(`/api/payment/status?depositId=${paymentData.depositId}`);
+        const data = await response.json();
+
+        if (data.data?.status === 'completed') {
+          // Payment completed successfully
+          clearInterval(pollInterval);
+          setShowPaymentDialog(false);
+          setShowSuccessDialog(true);
+          // Handle successful payment (e.g., add to cart, send email, etc.)
+          handlePaymentComplete();
+        } else if (data.data?.status === 'failed' || data.data?.status === 'expired') {
+          // Payment failed or expired
+          clearInterval(pollInterval);
+          toast({
+            title: "Payment Failed",
+            description: "Your payment has failed or expired. Please try again.",
+            variant: "destructive"
+          });
+        }
+      } catch (error) {
+        console.error('Error checking payment status:', error);
+      } finally {
+        setIsCheckingPayment(false);
+      }
+    };
+
+    if (showPaymentDialog && paymentData?.depositId) {
+      // Start polling when dialog is shown and we have a deposit ID
+      pollInterval = setInterval(checkPaymentStatus, 10000); // Poll every 10 seconds
+    }
+
+  }, [showPaymentDialog, paymentData?.depositId]);
+
+  const handleAddToCart = async () => {
+    if (!user) {
       toast({
-        title: "Error",
-        description: "Please log in to complete your purchase.",
+        title: "Login Required",
+        description: "Please login to continue with your purchase.",
         variant: "destructive"
       })
       return
     }
+
     if (!selectedItem || !playerId || !selectedPayment) {
       toast({
         title: "Missing information",
@@ -52,7 +152,42 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       return
     }
 
-    setShowPaymentDialog(true)
+    setIsLoadingPayment(true)
+    try {
+      const response = await fetch('/api/payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          outputCurrency: "IDR",
+          reference: `order-${Date.now()}`,
+          inputCurrency: "IDR",
+          balanceType: "fiat",
+          paymentMethod: selectedPayment,
+          inputAmount: selectedItem.price
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create payment');
+      }
+
+      console.log(data.data)
+
+      setPaymentData(data.data);
+      setShowPaymentDialog(true);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to process payment",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingPayment(false)
+    }
   }
 
   const handlePaymentComplete = async () => {
@@ -91,6 +226,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         itemName: selectedItem.name
       })
 
+      // Call our backend API for Digiflazz transaction
+      const digiflazzResponse = await fetch('/api/digiflazz/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productCode: selectedItem.productCode,
+          playerId,
+          serverId: product.name.toLowerCase().includes('mobile legends') ? serverId : undefined
+        })
+      })
+
+      const digiflazzData = await digiflazzResponse.json()
+      
+      if (!digiflazzResponse.ok) {
+        throw new Error(digiflazzData.error || 'Failed to process transaction')
+      }
+
       // Send confirmation email via API
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -122,11 +276,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         description: `Your purchase of ${selectedItem.name} for ${product.name} is being processed. We'll notify you via email once completed.`,
       })
     } catch (error) {
-    toast({
+      toast({
         title: "Error",
         description: "An error occurred while processing your purchase. Please try again.",
         variant: "destructive"
-    })
+      })
     } finally {
       setIsSendingEmail(false)
     }
@@ -196,45 +350,41 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 Pilih Nominal Top Up
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {product.items.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setSelectedItem(item)}
-                    className={cn(
-                      "group relative overflow-hidden rounded-xl border p-4 transition-all duration-300",
-                      selectedItem?.id === item.id
-                        ? "border-[#f77a0e] bg-[#f77a0e]/5"
-                        : "border-gray-200 hover:border-[#f77a0e]/50 hover:bg-[#f77a0e]/5"
-                    )}
-                  >
-                    {item.iconUrl && (
-                      <div className="mb-3">
-                        <Image
-                          src={item.iconUrl}
-                          alt={item.name}
-                          width={40}
-                          height={40}
-                          className="object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="text-left">
-                      <p className="font-semibold text-gray-900 group-hover:text-[#f77a0e] transition-colors duration-200">{item.name}</p>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Rp {item.price.toLocaleString('id-ID')},-
-                      </p>
-                    </div>
-                    {selectedItem?.id === item.id && (
-                      <div className="absolute top-2 right-2">
-                        <div className="w-5 h-5 rounded-full bg-[#f77a0e] flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-3 h-3">
-                            <path fillRule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </button>
-                ))}
+              {digiflazzItems.map((item) => (
+              <button
+                key={item.buyer_sku_code}
+                onClick={() => {
+                  console.log('Selected Digiflazz Item:', item);
+                  setSelectedItem({
+                    id: item.buyer_sku_code,
+                    name: item.product_name,
+                    price: item.price,
+                    productCode: item.buyer_sku_code
+                  })
+                }}
+                className={cn(
+                  "flex items-center gap-2 p-4 rounded-lg border transition-all",
+                  selectedItem?.id === item.buyer_sku_code
+                    ? "border-blue-500 bg-blue-500/10"
+                    : "border-white/10 hover:border-white/20 bg-white/5"
+                )}
+              >
+                <Image
+                  src="/diamond_img.webp"
+                  alt="Diamond"
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                />
+                <div className="text-left">
+                  <p className="font-semibold text-black">{item.product_name}</p>
+                  <p className="text-sm text-gray-400">
+                    Rp {item.price.toLocaleString('id-ID')},-
+                  </p>
+                </div>
+              </button>
+            ))
+          }
               </div>
             </div>
           </div>
@@ -267,6 +417,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                     Simpan ID dengan fitur Save ID
                   </p>
                 </div>
+
+                {/* Server ID Input - Only for Mobile Legends */}
+                {product.name.toLowerCase().includes('mobile legends') && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Masukkan Server ID
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your Server ID"
+                      value={serverId}
+                      onChange={(e) => setServerId(e.target.value)}
+                      className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-[#f77a0e] focus:ring-2 focus:ring-[#f77a0e]/20 transition-all duration-200"
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      Server ID dapat dilihat di profil game
+                    </p>
+                  </div>
+                )}
 
                 {/* Payment Methods */}
                 <div>
@@ -371,25 +540,36 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </p>
             </div>
 
-            {selectedPayment === 'qris' ? (
+            {selectedPayment === 'qris' && paymentData?.paymentFiat?.qrData ? (
               <div className="flex flex-col items-center space-y-4">
-                <div className="relative w-64 h-64 p-4 bg-white rounded-xl shadow-lg">
-                  <Image
-                    src="/payout_qris.png"
-                    alt="QRIS QR Code"
-                    fill
-                    className="object-contain"
+                <div className="relative w-64 h-64">
+                  <Canvas
+                    text={paymentData.paymentFiat.qrData}
+                    options={{
+                      errorCorrectionLevel: 'M',
+                      margin: 3,
+                      scale: 4,
+                      width: 256,
+                      color: {
+                        dark: '#000000FF',
+                        light: '#FFFFFFFF',
+                      },
+                    }}
                   />
                 </div>
                 <p className="text-sm text-gray-500">
                   Scan QR code using your preferred payment app
                 </p>
+                <div className="text-sm text-gray-500">
+                  <p>Expires at: {new Date(paymentData.expiredAt).toLocaleString()}</p>
+                </div>
               </div>
-            ) : (
+            ) : selectedPayment === 'va_permata' && paymentData?.paymentFiat ? (
               <div className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-xl">
+                <div className="p-4 bg-gray-50 rounded-lg">
                   <p className="text-sm text-gray-500 mb-1">Virtual Account Number:</p>
-                  <p className="text-xl font-mono font-semibold text-gray-900">8800123456789</p>
+                  <p className="text-lg font-mono font-semibold text-gray-900">{paymentData.paymentFiat.accountNumber}</p>
+                  <p className="text-sm text-gray-500 mt-1">Bank: {paymentData.paymentFiat.bankName}</p>
                 </div>
                 <ul className="text-sm text-gray-500 space-y-2">
                   <li>1. Login to your mobile banking app</li>
@@ -397,8 +577,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   <li>3. Enter the VA number above</li>
                   <li>4. Confirm and complete your payment</li>
                 </ul>
+                <div className="text-sm text-gray-500">
+                  <p>Expires at: {new Date(paymentData.expiredAt).toLocaleString()}</p>
+                </div>
               </div>
-            )}
+            ) : null}
 
             <div className="flex justify-center gap-3 mt-6">
               <Button

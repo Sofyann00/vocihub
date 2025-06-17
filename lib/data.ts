@@ -8405,11 +8405,11 @@ export const products: Product[] = [
   },
   {
     id: 20,
-    name: "Ragnarok Origin Crystals",
-    description: "Purchase Crystals for Ragnarok Origin for exclusive items.",
+    name: "Ragnarok M Classic",
+    description: "Purchase Zenny for Ragnarok M Classic for exclusive items.",
     price: 100000,
-    image: "https://static-src.vocagame.com/BisnisVocagame/ragnarok_origin-69f3-original.webp",
-    banner: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1EOaSR0NSR5NP2DBNIvHX5gbeGbYgi3HY3w&s",
+    image: "https://static-src.vocagame.com/BisnisVocagame/ROMC%20Icon-ef9c-original.webp",
+    banner: "https://static-src.vocagame.com/BisnisVocagame/banner_product non transparan-2db1-original-1192-original.webp",
     category: "Mobile Gaming",
     items: [
       {
