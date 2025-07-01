@@ -105,7 +105,7 @@ export default function PrivacyPage() {
               <div className="text-gray-600">
                 <p>For any questions about this Privacy Policy or our data practices, please contact us at:</p>
                 <div className="mt-2">
-                  <p>PT GENGGAM TEKNOLOGI ASIA</p>
+                  <p>PT TUJUH TEKNOLOGI RANTAI</p>
                   <p>Gedung Is Plaza Lt. 5</p>
                   <p>Jl Pramuka Kav 150, Utan Kayu Utara</p>
                   <p>Matraman, Jakarta Timur</p>

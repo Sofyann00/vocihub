@@ -239,7 +239,7 @@ export function CheckoutForm() {
             <div className="text-center space-y-2">
               <p className="font-semibold">MANDIRI</p>
               <p className="font-mono text-xl">164-00-0655244-4</p>
-              <div className="text-center mb-2">PT GENGGAM TEKNOLOGI ASIA</div>
+              <div className="text-center mb-2">PT TUJUH TEKNOLOGI RANTAI</div>
             </div>
             <Button 
               onClick={() => {
