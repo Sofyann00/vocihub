@@ -27,7 +27,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const [selectedItem, setSelectedItem] = useState<any | null>(null)
   const [playerId, setPlayerId] = useState("")
   const [serverId, setServerId] = useState("")
-  const [selectedPayment, setSelectedPayment] = useState<string | null>(null)
+  const [selectedPayment, setSelectedPayment] = useState<string | null>("qris")
   const [showPaymentDialog, setShowPaymentDialog] = useState(false)
   const [isSendingEmail, setIsSendingEmail] = useState(false)
   const [digiflazzItems, setDigiflazzItems] = useState<any[]>([])
@@ -465,46 +465,18 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                       Rp {selectedItem?.price.toLocaleString('id-ID') ?? '0'},-
                     </span>
                   </button>
-
-                  {/* Virtual Account */}
-                  <button
-                    onClick={() => setSelectedPayment('va')}
-                    className={cn(
-                      "w-full p-4 rounded-xl border flex items-center justify-between transition-all duration-200",
-                      selectedPayment === 'va'
-                        ? "border-[#f77a0e] bg-[#f77a0e]/5"
-                        : "border-gray-200 hover:border-[#f77a0e]/50 hover:bg-[#f77a0e]/5"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-gray-900">Virtual Account</span>
-                    </div>
-                    <span className="text-gray-500">
-                      Rp {selectedItem?.price.toLocaleString('id-ID') ?? '0'},-
-                    </span>
-                  </button>
                 </div>
 
                 {/* Payment Instructions */}
                 {selectedPayment && (
                   <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">Cara Pembayaran:</h4>
-                    {selectedPayment === 'qris' ? (
-                      <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
-                        <li>Scan QR Code yang muncul setelah konfirmasi</li>
-                        <li>Pilih aplikasi e-wallet atau mobile banking</li>
-                        <li>Masukkan nominal pembayaran</li>
-                        <li>Konfirmasi pembayaran</li>
-                      </ol>
-                    ) : (
-                      <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
-                        <li>Nomor Virtual Account akan muncul setelah konfirmasi</li>
-                        <li>Buka aplikasi mobile banking</li>
-                        <li>Pilih menu Transfer ke Virtual Account</li>
-                        <li>Masukkan nomor Virtual Account</li>
-                        <li>Konfirmasi pembayaran</li>
-                      </ol>
-                    )}
+                    <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
+                      <li>Scan QR Code yang muncul setelah konfirmasi</li>
+                      <li>Pilih aplikasi e-wallet atau mobile banking</li>
+                      <li>Masukkan nominal pembayaran</li>
+                      <li>Konfirmasi pembayaran</li>
+                    </ol>
                   </div>
                 )}
 
@@ -540,7 +512,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </p>
             </div>
 
-            {selectedPayment === 'qris' && paymentData?.paymentFiat?.qrData ? (
+            {selectedPayment === 'qris' && paymentData?.paymentFiat?.qrData && (
               <div className="flex flex-col items-center space-y-4">
                 <div className="relative w-64 h-64">
                   <Canvas
@@ -564,24 +536,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   <p>Expires at: {new Date(paymentData.expiredAt).toLocaleString()}</p>
                 </div>
               </div>
-            ) : selectedPayment === 'va_permata' && paymentData?.paymentFiat ? (
-              <div className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-1">Virtual Account Number:</p>
-                  <p className="text-lg font-mono font-semibold text-gray-900">{paymentData.paymentFiat.accountNumber}</p>
-                  <p className="text-sm text-gray-500 mt-1">Bank: {paymentData.paymentFiat.bankName}</p>
-                </div>
-                <ul className="text-sm text-gray-500 space-y-2">
-                  <li>1. Login to your mobile banking app</li>
-                  <li>2. Select Virtual Account payment</li>
-                  <li>3. Enter the VA number above</li>
-                  <li>4. Confirm and complete your payment</li>
-                </ul>
-                <div className="text-sm text-gray-500">
-                  <p>Expires at: {new Date(paymentData.expiredAt).toLocaleString()}</p>
-                </div>
-              </div>
-            ) : null}
+            )}
 
             <div className="flex justify-center gap-3 mt-6">
               <Button
