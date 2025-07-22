@@ -18,6 +18,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { useQRCode } from "next-qrcode"
+import { PaymentSuccessDialog } from "@/components/payment-success-dialog"
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { addItem } = useCart()
@@ -106,10 +107,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         if (data.data?.status === 'completed') {
           // Payment completed successfully
           clearInterval(pollInterval);
+          await processPaymentCompletion();
           setShowPaymentDialog(false);
           setShowSuccessDialog(true);
-          // Handle successful payment (e.g., add to cart, send email, etc.)
-          handlePaymentComplete();
         } else if (data.data?.status === 'failed' || data.data?.status === 'expired') {
           // Payment failed or expired
           clearInterval(pollInterval);
@@ -190,7 +190,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const handlePaymentComplete = async () => {
+  // Function to handle manual payment verification when user clicks button
+  const handleManualPaymentCheck = async () => {
+    if (!paymentData?.depositId || isSendingEmail) return;
+
     if (!user?.email) {
       toast({
         title: "Error",
@@ -202,6 +205,51 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
     setIsSendingEmail(true)
     
+    try {
+      // First, verify payment status
+      const response = await fetch(`/api/payment/status?depositId=${paymentData.depositId}`);
+      const data = await response.json();
+
+      if (data.data?.status === 'completed') {
+        // Payment verified as completed, proceed with completion logic
+        await processPaymentCompletion();
+        setShowPaymentDialog(false);
+        setShowSuccessDialog(true);
+      } else if (data.data?.status === 'failed' || data.data?.status === 'expired') {
+        toast({
+          title: "Payment Not Completed",
+          description: "Your payment has not been completed yet or has failed. Please ensure payment is successful before proceeding.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Payment Pending",
+          description: "Your payment is still being processed. Please wait a moment and try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to verify payment status. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingEmail(false)
+    }
+  };
+
+  // Function to process payment completion (used by both polling and manual verification)
+  const processPaymentCompletion = async () => {
+    if (!user?.email) {
+      toast({
+        title: "Error",
+        description: "Please log in to complete your purchase.",
+        variant: "destructive"
+      })
+      return
+    }
+
     try {
       // Add to cart
       addItem({
@@ -270,7 +318,6 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         })
       }
       
-      setShowPaymentDialog(false)
       toast({
         title: "Thank You For Purchasing",
         description: `Your purchase of ${selectedItem.name} for ${product.name} is being processed. We'll notify you via email once completed.`,
@@ -281,10 +328,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         description: "An error occurred while processing your purchase. Please try again.",
         variant: "destructive"
       })
-    } finally {
-      setIsSendingEmail(false)
+      throw error; // Re-throw to handle in calling function
     }
   }
+
+  // Legacy function name for backward compatibility with polling mechanism
+  const handlePaymentComplete = processPaymentCompletion;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -540,7 +589,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
             <div className="flex justify-center gap-3 mt-6">
               <Button
-                onClick={handlePaymentComplete}
+                onClick={handleManualPaymentCheck}
                 disabled={isSendingEmail}
                 className="bg-[#f77a0e] hover:bg-[#f77a0e]/90 text-white rounded-xl shadow-lg shadow-[#f77a0e]/20 hover:shadow-xl hover:shadow-[#f77a0e]/30 transition-all duration-300"
               >
@@ -550,7 +599,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Processing...
+                    Verifying Payment...
                   </>
                 ) : (
                   "I have completed the payment"
@@ -560,6 +609,17 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <PaymentSuccessDialog
+        isOpen={showSuccessDialog}
+        onClose={() => setShowSuccessDialog(false)}
+        paymentData={paymentData}
+        productData={product}
+        selectedItem={{
+          ...selectedItem,
+          playerId
+        }}
+      />
     </div>
   )
 } 
