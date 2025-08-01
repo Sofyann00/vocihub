@@ -71,7 +71,7 @@ export default function AboutPage() {
               <div className="text-gray-600">
                 <p>Visit our office:</p>
                 <div className="mt-2">
-                  <p>PT TUJUH TEKNOLOGI RANTAI</p>
+                  <p>PT GENGGAM TEKNOLOGI ASIA</p>
                   <p>Gedung Is Plaza Lt. 5</p>
                   <p>Jl Pramuka Kav 150, Utan Kayu Utara</p>
                   <p>Matraman, Jakarta Timur</p>

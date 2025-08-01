@@ -102,7 +102,7 @@ export function Footer() {
         <div className="mt-16 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} PT TUJUH TEKNOLOGI RANTAI. All rights reserved.
+              © {new Date().getFullYear()} PT GENGGAM TEKNOLOGI ASIA. All rights reserved.
             </p>
           </div>
         </div>

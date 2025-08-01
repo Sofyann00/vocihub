@@ -23,7 +23,7 @@ export default function TermsPage() {
                 1. Agreement to Terms
               </h2>
               <p className="text-gray-600">
-                By accessing and using the game voucher and top-up services provided by PT TUJUH TEKNOLOGI RANTAI (hereinafter referred to as "vocihub"), you accept and agree to be bound by the terms and provisions of this agreement.
+                By accessing and using the game voucher and top-up services provided by PT GENGGAM TEKNOLOGI ASIA (hereinafter referred to as "vocihub"), you accept and agree to be bound by the terms and provisions of this agreement.
               </p>
             </div>
 
@@ -88,7 +88,7 @@ export default function TermsPage() {
               <div className="text-gray-600">
                 <p>For any questions about these Terms of Service, please contact us at:</p>
                 <div className="mt-2">
-                  <p>PT TUJUH TEKNOLOGI RANTAI</p>
+                  <p>PT GENGGAM TEKNOLOGI ASIA</p>
                   <p>Gedung Is Plaza Lt. 5</p>
                   <p>Jl Pramuka Kav 150, Utan Kayu Utara</p>
                   <p>Matraman, Jakarta Timur</p>
